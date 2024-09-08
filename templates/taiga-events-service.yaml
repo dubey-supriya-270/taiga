@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "taiga.fullname" . }}-events
+  labels:
+    {{- include "taiga.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.taigaEvents.service.type }}
+  ports:
+    - port: {{ .Values.taigaEvents.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- toYaml .Values.taigaEvents.service.selector | nindent 4 }}

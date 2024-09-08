@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: taiga-config
+data:
+  POSTGRES_DB: "taiga"
+  POSTGRES_HOST: "taiga-db"
+  TAIGA_SITES_SCHEME: "http"
+  TAIGA_SITES_DOMAIN: "localhost:80"
+  TAIGA_URL: "http://localhost:8080"
+  TAIGA_WEBSOCKETS_URL: "ws://localhost:8080"
+  TAIGA_SUBPATH: ""
+  EMAIL_BACKEND: "django.core.mail.backends.console.EmailBackend"
+  EMAIL_USE_TLS: "true"
+  EMAIL_USE_SSL: "false"
+  EMAIL_HOST: "smtp.host.example.com"
+  EMAIL_PORT: "587"
+  DEFAULT_FROM_EMAIL: "changeme@example.com"
+  EMAIL_USE_TLS: "true"
+  EMAIL_USE_SSL: "false"
+  RABBITMQ_VHOST: "taiga"
+  RABBITMQ_ERLANG_COOKIE: "secret-erlang-cookie"
+  ATTACHMENTS_MAX_AGE: "360"
+  ENABLE_TELEMETRY: "true"
+  

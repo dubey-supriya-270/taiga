@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "taiga.fullname" . }}-events-rabbitmq
+  labels:
+    {{- include "taiga.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.taigaEventsRabbitmq.service.type }}
+  ports:
+    {{- range .Values.taigaEventsRabbitmq.service.ports }}
+    - port: {{ .port }}
+      name: {{ .name }}
+    {{- end }}
+  selector:
+    {{- toYaml .Values.taigaEventsRabbitmq.service.selector | nindent 4 }}

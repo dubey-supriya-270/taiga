@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "taiga.fullname" . }}-events
+  labels:
+    {{- toYaml .Values.taigaEvents.selectorLabels | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- toYaml .Values.taigaEvents.selectorLabels | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- toYaml .Values.taigaEvents.selectorLabels | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "taiga.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-events
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.taigaEvents.image.repository }}:{{ .Values.taigaEvents.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.taigaEvents.image.pullPolicy }}
+          env:
+          - name: RABBITMQ_USER
+            valueFrom:
+              secretKeyRef:
+                name: taiga-secret
+                key: RABBITMQ_USER
+          - name: TAIGA_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: taiga-secret
+                key: TAIGA_SECRET_KEY
+          - name: RABBITMQ_PASS
+            valueFrom:
+              secretKeyRef:
+                name: taiga-secret
+                key: RABBITMQ_PASS
+          ports:
+            - name: http
+              containerPort: {{ .Values.taigaEvents.service.port }}
+              protocol: TCP
+
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

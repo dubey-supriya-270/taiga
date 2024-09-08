@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "taiga.fullname" . }}-gateway
+  labels:
+    {{- include "taiga.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.taigaGateway.service.type }}
+  ports:
+    - port: {{ .Values.taigaGateway.service.port }}
+      targetPort: {{ .Values.taigaGateway.service.targetPort }}
+      protocol: TCP
+  selector:
+    {{- toYaml .Values.taigaGateway.service.selector | nindent 4 }}
