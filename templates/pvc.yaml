@@ -1,0 +1,32 @@
+# templates/pvc.yaml
+{{- if .Values.persistence.staticData.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: taiga-static-data
+  labels:
+    app: taiga
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.persistence.staticData.size }}
+  storageClassName: {{ .Values.persistence.staticData.storageClass }}
+{{- end }}
+
+{{- if .Values.persistence.mediaData.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: taiga-media-data
+  labels:
+    app: taiga
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.persistence.mediaData.size }}
+  storageClassName: {{ .Values.persistence.mediaData.storageClass }}
+{{- end }}

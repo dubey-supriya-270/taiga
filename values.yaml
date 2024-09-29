@@ -93,6 +93,18 @@ volumeMounts: []
 # - name: foo
 #   mountPath: "/etc/foo"
 #   readOnly: true
+# values.yaml
+persistence:
+  staticData:
+    enabled: true
+    mountPath: "/taiga-back/static"
+    size: "10Gi"
+    storageClass: "standard"
+  mediaData:
+    enabled: true
+    mountPath: "/taiga-back/media"
+    size: "10Gi"
+    storageClass: "standard"
 
 nodeSelector: {}
 
@@ -220,7 +232,7 @@ taigaGateway:
   selectorLabels:
     app: taiga-gateway
   service:
-    type: ClusterIP
+    type: LoadBalancer
     port: 80
     targetPort: 80
     selector:

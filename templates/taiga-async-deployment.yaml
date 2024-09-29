@@ -50,12 +50,25 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
           volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{- with .Values.volumes }}
+            {{- if .Values.persistence.staticData.enabled }}
+            - name: taiga-static-data
+              mountPath: {{ .Values.persistence.staticData.mountPath | quote }}
+            {{- end }}
+            {{- if .Values.persistence.mediaData.enabled }}
+            - name: taiga-media-data
+              mountPath: {{ .Values.persistence.mediaData.mountPath | quote }}
+            {{- end }}
       volumes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- if .Values.persistence.staticData.enabled }}
+        - name: taiga-static-data
+          persistentVolumeClaim:
+            claimName: taiga-static-data
+        {{- end }}
+        {{- if .Values.persistence.mediaData.enabled }}
+        - name: taiga-media-data
+          persistentVolumeClaim:
+            claimName: taiga-media-data
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -9,6 +9,5 @@ spec:
   ports:
     - port: {{ .Values.taigaGateway.service.port }}
       targetPort: {{ .Values.taigaGateway.service.targetPort }}
-      protocol: TCP
   selector:
     {{- toYaml .Values.taigaGateway.service.selector | nindent 4 }}
